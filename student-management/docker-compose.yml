@@ -5,9 +5,8 @@ services:
     image: mysql:8.0
     container_name: mysql-db
     environment:
-      MYSQL_ROOT_PASSWORD: ""            # root sans mot de passe
       MYSQL_DATABASE: "studentdb"
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"  # nécessaire pour autoriser root vide
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"      # permet root sans mot de passe
     ports:
       - "3306:3306"
     volumes:
@@ -27,7 +26,7 @@ services:
     ports:
       - "8089:8089"
     environment:
-      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql-db:3306/studentdb?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql-db:3306/studentdb?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC"
       SPRING_DATASOURCE_USERNAME: "root"
       SPRING_DATASOURCE_PASSWORD: ""
       SPRING_JPA_HIBERNATE_DDL_AUTO: "update"
