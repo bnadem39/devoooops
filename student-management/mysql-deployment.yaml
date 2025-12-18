@@ -23,12 +23,6 @@ spec:
           value: "yes"
         ports:
         - containerPort: 3306
-        volumeMounts:
-        - name: mysql-storage
-          mountPath: /var/lib/mysql
-      volumes:
-      - name: mysql-storage
-        emptyDir: {}  # <--- Remplace le PVC par emptyDir (pas de persistance, mais parfait pour l'atelier)
 
 ---
 apiVersion: v1

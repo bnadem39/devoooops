@@ -1,0 +1,72 @@
+# 1. CONFIGMAP (Slide 12) - Stores non-sensitive DB URL
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: student-config
+  namespace: devops
+data:
+  # Matches the MySQL service name from Slide 10 and DB name from Slide 9 (springdb)
+  SPRING_DATASOURCE_URL: jdbc:mysql://mysql-service:3306/springdb?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+  SERVER_PORT: "8089"
+  SERVER_SERVLET_CONTEXT_PATH: /student
+
+---
+# 2. SECRET (Slide 12) - Stores sensitive Credentials
+apiVersion: v1
+kind: Secret
+metadata:
+  name: student-secret
+  namespace: devops
+type: Opaque
+stringData:
+  # 'stringData' allows you to write plain text here, K8s will base64 encode it automatically
+  SPRING_DATASOURCE_USERNAME: root
+  # MUST match the password set in Slide 9 (MYSQL_ROOT_PASSWORD)
+  SPRING_DATASOURCE_PASSWORD: root123 
+
+---
+# 3. DEPLOYMENT (Slide 13)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: student-app
+  namespace: devops
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: student-app
+  template:
+    metadata:
+      labels:
+        app: student-app
+    spec:
+      containers:
+      - name: student-app
+        image: student-management:latest
+        # Good practice for local minikube images to ensure it doesn't try to pull from internet
+        imagePullPolicy: IfNotPresent 
+        ports:
+        - containerPort: 8089
+        # Loads variables from the ConfigMap and Secret defined above (Slide 13 style)
+        envFrom:
+          - configMapRef:
+              name: student-config
+          - secretRef:
+              name: student-secret
+
+---
+# 4. SERVICE (Slide 14)
+apiVersion: v1
+kind: Service
+metadata:
+  name: student-service
+  namespace: devops
+spec:
+  selector:
+    app: student-app
+  type: NodePort
+  ports:
+  - port: 8089        # The port the Service exposes internally
+    targetPort: 8089  # The port your container is listening on
+    nodePort: 30080   # The fixed external port (as per Slide 14)
