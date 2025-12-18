@@ -22,7 +22,7 @@ stringData:
   # 'stringData' allows you to write plain text here, K8s will base64 encode it automatically
   SPRING_DATASOURCE_USERNAME: root
   # MUST match the password set in Slide 9 (MYSQL_ROOT_PASSWORD)
-  SPRING_DATASOURCE_PASSWORD: root123 
+  SPRING_DATASOURCE_PASSWORD:
 
 ---
 # 3. DEPLOYMENT (Slide 13)
