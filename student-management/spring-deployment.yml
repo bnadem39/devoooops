@@ -32,7 +32,7 @@ metadata:
   name: student-app
   namespace: devops
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: student-app
